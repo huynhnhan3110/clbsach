@@ -1,4 +1,4 @@
 # clbsach
 App
-![loginScreen](login.jpg)
-![SignupScreen](signup.jpg)
+![loginScreen](screenshots/login.jpg)
+![SignupScreen](screenshots/signup.jpg)
