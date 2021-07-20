@@ -1,4 +1,4 @@
-import 'package:clb_sach/screens/login/login.dart';
+import 'package:clb_sach/screens/root/root.dart';
 import 'package:clb_sach/states/currentuser.dart';
 import 'package:clb_sach/utils/ourTheme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: OurTheme().buildTheme(),
-        home: OurLogin(),
+        home: OurRoot(),
       ),
     );
   }

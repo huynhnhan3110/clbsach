@@ -6,11 +6,19 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:clb_sach/widgets/ourDialog.dart';
+enum LoginType {
+  google,email
+}
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
 
-
-class LoginForm extends StatelessWidget {
+class _LoginFormState extends State<LoginForm> {
   TextEditingController _email = new TextEditingController();
+
   TextEditingController _password = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     
@@ -47,7 +55,7 @@ class LoginForm extends StatelessWidget {
                     if(_email.text == '' || _password.text == '') {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password/Email not enter"),duration: Duration(seconds: 2),));
                     } else {
-                      _login(_email.text,_password.text,context);
+                      _login(logintype: LoginType.email, email:_email.text,password: _password.text,context: context);
                     }
                   },
                   child: Container(
@@ -67,8 +75,46 @@ class LoginForm extends StatelessWidget {
                         textAlign: TextAlign.center),
                   ),
                 ),
+          SizedBox(height: 20,),
+          TextButton(
+                  style: TextButton.styleFrom(
+                    shape:
+                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    backgroundColor: Colors.white,
+                    side: BorderSide(
+                      color: Colors.black87,
+                      width: 3,
+                    ),
+                    padding: EdgeInsets.only(top: 15, bottom: 0),
+                  ),
+                  onPressed: () {
+                    _login(logintype: LoginType.google, context: context);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom:
+                            BorderSide(width: 10.0, color: Color(0xffd1a832)),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      Image(image: AssetImage("assets/google_logo.png"),height: 25.0,),
+                      Padding(padding: const EdgeInsets.only(left: 10.0),
+                      child: Text('Sign in with Google',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                        textAlign: TextAlign.center),
+                      )
+                    ],)
+                  ),
+                ),
           SizedBox(height: 25,),
-          
           RichText(
             text: TextSpan(
               text: "New user? ",style: TextStyle(color: Theme.of(context).accentColor,fontSize: 16,),
@@ -84,10 +130,25 @@ class LoginForm extends StatelessWidget {
     );
   }
 
-  void _login(String email, String password, BuildContext context) async {
+  void _login({required LoginType logintype,String? email, String? password, required BuildContext context}) async {
     OurDialog.showLoadingDialog(context, 'Loading...');
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
-    if(await _currentUser.login(email, password)) {
+    String result = "fail";
+    switch(logintype) {
+      case LoginType.google:
+        if(await _currentUser.loginWithGoogle()) {
+           result = "success";
+        }
+        break;
+      case LoginType.email:
+        if(await _currentUser.loginWithEmail(email!, password!)) {
+          result = "success";
+        }
+        break;
+        default:
+    }
+    
+    if(result == "success") {
       OurDialog.hideLoadingDialog(context);
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => HomeScreen(),)
