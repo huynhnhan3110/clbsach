@@ -1,4 +1,3 @@
 # clbsach
 App
-![loginScreen](screenshots/login.jpg)
-![SignupScreen](screenshots/signup.jpg)
+<img src="screenshots/login.jpg" data-canonical-src="screenshots/login.jpg" width="200" />
